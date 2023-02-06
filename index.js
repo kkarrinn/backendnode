@@ -8,15 +8,23 @@ nunjucks.configure('views', {
     autoescape: true,
     express: app
 });
+
+app.use(express.urlencoded({extended:true}));
+
 app.get('/', (req, res) => {
   res.render('index.njk');
 });
 
-app.get('/greeting', (req, res) => {
-  console.log(req.query);
+app.get('/page', (req, res) => {
+  res.render('page.njk', {page: req.query.p});
+});
+
+
+app.post('/greeting', (req, res) => {
+  console.log(req.body.name);
   res.render('greeting.njk', {
-    name: req.query.name,
-    age: req.query.age    
+    name: req.body.name,
+    age: req.body.age    
   });
 })
 
