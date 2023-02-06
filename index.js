@@ -9,8 +9,15 @@ nunjucks.configure('views', {
     express: app
 });
 app.get('/', (req, res) => {
-  res.sendFile(path.resolve(__dirname,'index.html'));
   res.render('index.njk');
+});
+
+app.get('/greeting', (req, res) => {
+  console.log(req.query);
+  res.render('greeting.njk', {
+    name: req.query.name,
+    age: req.query.age    
+  });
 })
 
 app.get('/about', (req, res) => {
