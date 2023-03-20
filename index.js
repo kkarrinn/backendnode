@@ -3,6 +3,13 @@ const path = require('path');
 const app = express();
 const port = 3000;
 const nunjucks = require('nunjucks');
+const sqlite3 = require('sqlite3');
+const open = require('sqlite').open;
+
+open({
+  filename: './database.sqlite',
+  driver: sqlite3.Database
+}).then( async db => {
 
 nunjucks.configure('views', {
     autoescape: true,
@@ -31,26 +38,40 @@ app.post('/greeting', (req, res) => {
 app.get('/about', (req, res) => {
   res.sendFile(path.resolve(__dirname,'index.html'));
   res.render('about.njk');
-}) 
+});
 
 app.get('/gallery', (req, res) => {
   res.sendFile(path.resolve(__dirname,'index.html'));
   res.render('gallery.njk');
-})
+});
 
 app.get('/contact', (req, res) => {
   res.sendFile(path.resolve(__dirname,'index.html'));
   res.render('contact.njk');
-})
+});
 
 app.get('/values', (req, res) => {
   res.sendFile(path.resolve(__dirname,'index.html'));
-  res.render('values.njk');
-})
+  res.render('values.njk', {articles: articles});
+});
 
+app.get('/articles', async (req, res) => {
+  const articles = await db.all('SELECT * FROM articles;');
+
+  res.render('articles.njk', {articles});
+});
+
+app.get('/articles/new', (req, res) => {
+  res.render('newarticle.njk');
+});
+
+app.post('/articles', async (req, res) => {
+  await db.run(`INSERT INTO articles (title, body) VALUES ('${req.body.title}', '${req.body.title}')`)
+  res.redirect('/articles');
+})
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
-})
+});
 
-
+});
