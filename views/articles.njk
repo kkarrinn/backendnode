@@ -15,7 +15,11 @@
                 <th>{{article.id}}</th>
                 <th>{{article.title}}</th>
                 <th>{{article.body}}</th>
-                <th>Actions</th>
+                <td>
+                    <a href="/articles/edit?id={{article.id}}">edit</a>
+                    <a href="/articles/delete?id={{article.id}}">delete</a>
+                </td>
+                
             </tr>
             {% endfor %}
             </tbody>
